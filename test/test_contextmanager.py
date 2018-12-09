@@ -2,7 +2,7 @@
 create by gaowenfeng on 
 """
 
-__author__ = "gaowenfeng"
+__author__ = 'weilai'
 from contextlib import contextmanager
 
 
@@ -14,4 +14,10 @@ def book_mark():
 
 
 with book_mark():
-    print('钢铁',end='')
+    print('挪威的森林',end='')
+
+'''
+先执行   print('《', end='')
+再执行   print('挪威的森林',end='')
+最后执行 print('》', end='')
+'''
