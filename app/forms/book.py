@@ -13,7 +13,7 @@ class SearchForm(Form):
     q = StringField(validators=[DataRequired(), Length(min=1, max=30,message="查询关键字长度必须在1-30之间")])
     page = IntegerField(validators=[NumberRange(min=1, max=99)], default=1)
 
-class DriftForm(Form):
+class DriftForm(Form):    # 鱼漂表单信息
     recipient_name = StringField(
         '收件人姓名', validators=[DataRequired(), Length(min=2, max=20,
                                                     message='收件人姓名长度必须在2到20个字符之间')])

@@ -1,17 +1,37 @@
-from flask_sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy as  _SQLAlchemy,BaseQuery
 from sqlalchemy import SmallInteger, Column
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Integer, String
 from datetime import datetime
 from contextlib import contextmanager
 
 __author__ = 'weilai'
 
-db = SQLAlchemy()
+class SQLAlchemy(_SQLAlchemy):
+    @contextmanager
+    def auto_commit(self):
+        try:
+            yield
+            self.session.commit()
+        except Exception as e:
+            self.session.rollback()
+            raise e
 
+class Query(BaseQuery):
+
+    def filter_by(self, **kwargs):  # **kwargs 表示字典
+        if 'status' not in kwargs:  # 取字典所有键的集合
+            kwargs['status'] = 1  # 完成自己的filter逻辑
+        return super(Query, self).filter_by(**kwargs)  # 继承
+
+
+db = SQLAlchemy(query_class=Query)  # 替换
+
+
+# db = SQLAlchemy()
 
 class Base(db.Model):
     __abstract__ = True
-    create_time = Column(Integer)
+    create_time = Column('create_time',Integer)
     status = Column(SmallInteger, default=1)
 
     def __init__(self):
@@ -31,3 +51,4 @@ class Base(db.Model):
             return datetime.fromtimestamp(self.create_time)
         else:
             return None
+            

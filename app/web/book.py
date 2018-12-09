@@ -14,6 +14,12 @@ from app.view_models.book import BookViewModel,BookCollection
 import json
 
 from flask import render_template, flash
+
+from app.models.gift import Gift
+from app.models.wish import Wish
+from app.view_models.trade import TradeInfo
+
+from flask_login import current_user
 # # web = Blueprint('web', __name__)  # 'web'模块名，__name__蓝图所在包或者模块 # 转移到 app.web.blueprint中
 
 
@@ -99,11 +105,31 @@ def search():
     return render_template('search_result.html', books=books)
 # 遇到的坑   base.html 关于user注释掉。不能用ctrl +/  ，所以报错 'current_user' is undefined
 
+
 @web.route("/book/<isbn>/detail")
 def book_detail(isbn):
+    has_in_gifts = False
+    has_in_wishes = False
+
+    # 取出每本书的详情
     yushu_book = YuShuBook()
     yushu_book.search_by_isbn(isbn)
     book = BookViewModel(yushu_book.first)
-    return render_template("book_detail.html", book=book, wishes=[], gifts=[])
 
+    # 三种情况的判断
+    if current_user.is_authenticated:
+        if Gift.query.filter_by(uid=current_user.id).first():
+            has_in_gifts = True
+        if Wish.query.filter_by(uid=current_user.id).first():
+            has_in_wishes = True
+
+    # 赠书人列表和索要人列表
+    trade_gifts = Gift.query.filter_by(isbn=isbn).all()
+    trade_wishes = Wish.query.filter_by(isbn=isbn).all()
+
+
+
+    return render_template("book_detail.html", book=book,
+                           wishes=trade_wishes, gifts=trade_gifts,
+                           has_in_wishes=has_in_wishes, has_in_gifts=has_in_gifts)
 
