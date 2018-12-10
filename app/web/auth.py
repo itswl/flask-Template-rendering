@@ -1,7 +1,7 @@
 from .blueprint import web 
 from flask import render_template, request, redirect, url_for, flash
 
-from app.forms.auth import RegisterForm, LoginForm,EmailForm,ResetPasswordForm
+from app.forms.auth import RegisterForm, LoginForm, EmailForm, ResetPasswordForm, ChangePasswordForm
 
 from app.models.base import db,Base
 
@@ -66,7 +66,7 @@ def forget_password_request():
     form = EmailForm(request.form)
     if request.method == 'POST' and form.validate():
         account_email = form.email.data
-        user = User.query.filter_by(email=account_email).first_or_404()
+        user = User.query.filter_by(email=account_email).first_or_404()  # 避免自己处理用户为空的情况
         send_mail(
             account_email, "重置你的密码", 'email/reset_password.html',
             user=user, token=user.generate_token())
@@ -86,12 +86,16 @@ def forget_password(token):
             flash('您的密码已重置，请使用新密码登录')
             return redirect(url_for('web.login'))
         flash('密码重置失败')
-    return render_template('auth/forget_password.html',form = form)
+    return render_template('auth/forget_password.html', form = form)
 
 
 @web.route('/change/password', methods=['GET', 'POST'])
 def change_password():
-    return render_template('auth/change_password.html')
+    form = ChangePasswordForm(request.form)
+    if request.method == 'POST' and form.validate():
+        User.change_password(form.password.data, form.password1.data)
+
+    return render_template('auth/change_password.html', form=form)
 
 
 @web.route('/logout')

@@ -20,3 +20,6 @@ class Book(db.Model):
     isbn = Column(String(15), nullable=True, unique=True)
     summary = Column(String(1000))
     image = Column(String(50))
+
+
+    # book model 写入

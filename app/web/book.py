@@ -106,10 +106,36 @@ def search():
 # 遇到的坑   base.html 关于user注释掉。不能用ctrl +/  ，所以报错 'current_user' is undefined
 
 
+# @web.route("/book/<isbn>/detail")
+# def book_detail(isbn):
+#     has_in_gifts = False
+#     has_in_wishes = False
+
+#     # 取出每本书的详情
+#     yushu_book = YuShuBook()
+#     yushu_book.search_by_isbn(isbn)
+#     book = BookViewModel(yushu_book.first)
+
+#     # 三种情况的判断
+#     if current_user.is_authenticated:
+#         print(111, Gift.query.filter_by(uid=1).first())
+#         if Gift.query.filter_by(uid=current_user.id).first():
+#             has_in_gifts = True
+#         if Wish.query.filter_by(uid=current_user.id).first():
+#             has_in_wishes = True
+
+#     # 赠书人列表和索要人列表
+#     trade_gifts = Gift.query.filter_by(isbn=isbn).all()
+#     trade_wishes = Wish.query.filter_by(isbn=isbn).all()
+
+
+
+#     return render_template("book_detail.html", book=book,
+#                            wishes=trade_wishes, gifts=trade_gifts,
+#                            has_in_wishes=has_in_wishes, has_in_gifts=has_in_gifts)
+
 @web.route("/book/<isbn>/detail")
 def book_detail(isbn):
-    has_in_gifts = False
-    has_in_wishes = False
 
     # 取出每本书的详情
     yushu_book = YuShuBook()
@@ -117,19 +143,15 @@ def book_detail(isbn):
     book = BookViewModel(yushu_book.first)
 
     # 三种情况的判断
-    if current_user.is_authenticated:
-        if Gift.query.filter_by(uid=current_user.id).first():
-            has_in_gifts = True
-        if Wish.query.filter_by(uid=current_user.id).first():
-            has_in_wishes = True
+    has_in_gifts = current_user.is_authenticated and current_user.has_in_gifts(isbn)
+    has_in_wishes = current_user.is_authenticated and current_user.has_in_wishs(isbn)
 
     # 赠书人列表和索要人列表
     trade_gifts = Gift.query.filter_by(isbn=isbn).all()
-    trade_wishes = Wish.query.filter_by(isbn=isbn).all()
+    trade_wishs = Wish.query.filter_by(isbn=isbn).all()
 
-
-
+    trade_wishs_model = TradeInfo(trade_wishs)
+    trade_gifts_model = TradeInfo(trade_gifts)
     return render_template("book_detail.html", book=book,
-                           wishes=trade_wishes, gifts=trade_gifts,
+                           wishes=trade_wishs_model, gifts=trade_gifts_model,
                            has_in_wishes=has_in_wishes, has_in_gifts=has_in_gifts)
-
