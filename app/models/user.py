@@ -70,6 +70,19 @@ class User(UserMixin,Base):
             user.password = new_password    # 会加密 密码，好好想一下。
         return True     
 
+    @classmethod
+    def change_password(cls, password, password1):
+        #     return False
+        # return check_password_hash(self._password,raw)
+        
+
+        with db.auto_commit():
+            user = User.query.get_or_404(id)
+            user.password = password1    # 会加密 密码，好好想一下。  
+        return True 
+
+
+
 
     def can_save_to_list(self,isbn):
         if is_isbn_or_key(isbn) != 'isbn':  # 判断是不是isbn
@@ -109,12 +122,17 @@ class User(UserMixin,Base):
     @property
     def summary(self):
         return dict(
-            nikename=self.nickname,
+            nickname=self.nickname,
             beans=self.beans,
             email=self.email,
             send_receive=str(self.send_counter) + '/' + str(self.receive_counter)
         )
 
+    def has_in_gifts(self, isbn):
+        return Gift.query.filter_by(uid=self.id, isbn=isbn).first() is not None
+
+    def has_in_wishs(self, isbn):
+        return Wish.query.filter_by(uid=self.id, isbn=isbn).first() is not None
 
 
 
