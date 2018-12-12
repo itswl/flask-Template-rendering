@@ -71,7 +71,7 @@ class User(UserMixin,Base):
         return True     
 
     @classmethod
-    def change_password(cls, password, password1):
+    def change_password(cls, new_password):
         #     return False
         # return check_password_hash(self._password,raw)
         

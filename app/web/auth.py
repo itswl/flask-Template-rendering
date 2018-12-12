@@ -1,13 +1,13 @@
 from .blueprint import web 
 from flask import render_template, request, redirect, url_for, flash
 
-from app.forms.auth import RegisterForm, LoginForm, EmailForm, ResetPasswordForm, ChangePasswordForm
+from app.forms.auth import RegisterForm, LoginForm, EmailForm, ResetPasswordForm,ChangePasswordForm
 
 from app.models.base import db,Base
 
 from app.models.user import User
 
-from flask_login import login_user,logout_user
+from flask_login import login_user,logout_user,current_user,login_required
 from app.libs.email import send_mail
 
 __author__ = '七月'
@@ -77,6 +77,11 @@ def forget_password_request():
 
 # 单元测试
 
+
+
+
+
+
 @web.route('/reset/password/<token>', methods=['GET', 'POST'])
 def forget_password(token):
     form = ResetPasswordForm(request.form)
@@ -88,13 +93,17 @@ def forget_password(token):
         flash('密码重置失败')
     return render_template('auth/forget_password.html', form = form)
 
-
 @web.route('/change/password', methods=['GET', 'POST'])
+@login_required 
 def change_password():
-    form = ChangePasswordForm(request.form)
-    if request.method == 'POST' and form.validate():
-        User.change_password(form.password.data, form.password1.data)
+    form =  ChangePasswordForm(request.form)
 
+    if request.method == 'POST' and form.validate():
+        if current_user.check_password(form.old_password.data):
+            current_user.change_password(form.password1.data)
+            flash('您的密码已重置，请使用新密码登录')
+            return redirect(url_for('web.login'))
+        flash('密码更改失败')
     return render_template('auth/change_password.html', form=form)
 
 
@@ -102,3 +111,4 @@ def change_password():
 def logout():
     logout_user()
     return redirect(url_for('web.index'))
+

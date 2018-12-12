@@ -28,17 +28,28 @@ class Gift(Base):
 
 
 
+    # @classmethod
+    # def recent(cls):
+    #     # 链式调用 主体是Query ，遇到all(),first()就会终止生成一条sql
+    #     # 建造者模式
+    #     # select distinct * from gift group by isbn order by create_time limit 30
+    #     recent_gift = Gift.query.filter_by(
+    #         launched=False).group_by(
+    #         Gift.isbn
+    #         ).order_by(desc(          # desc 表示倒序排列
+    #         Gift.create_time)).limit(
+    #         current_app.config['RECENT_BOOK_COUNT']).distinct().all()
+    #     return recent_gift
+
     @classmethod
     def recent(cls):
-        # 链式调用 主体是Query ，遇到all(),first()就会终止生成一条sql
-        # 建造者模式
         # select distinct * from gift group by isbn order by create_time limit 30
-        recent_gift = Gift.query.filter_by(
-            launched=False).order_by(desc(          # desc 表示倒序排列
-            Gift.create_time)).limit(
-            current_app.config['RECENT_BOOK_COUNT']).distinct().all()
-        return recent_gift
-
+        recent_gifts = Gift.query \
+            .filter_by(launched=False) \
+            .order_by(Gift.create_time) \
+            .limit(30) \
+            .distinct().all()
+        return recent_gifts
     @classmethod
     def get_user_gifts(cls, uid):
         gifts = Gift.query \

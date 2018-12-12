@@ -7,6 +7,7 @@ from flask import current_app
 from app.models.wish import Wish
 from app.models.gift import Gift
 
+
 from app.view_models.trade import MyTrade
 
 from app.models.base import db
@@ -40,7 +41,7 @@ def save_to_wish(isbn):
 
             # current_user.beans += current_app.config['BEANS_UPLOAD_ONE_BOOK']  # 每次上传赠送鱼豆
 
-            db.session.add(Wish)
+            db.session.add(wish)
 
         #     db.session.commit()   # 建议使用过 commit()都用回滚
         # except Exception as e:
