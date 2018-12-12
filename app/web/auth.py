@@ -3,11 +3,11 @@ from flask import render_template, request, redirect, url_for, flash
 
 from app.forms.auth import RegisterForm, LoginForm, EmailForm, ResetPasswordForm,ChangePasswordForm
 
-from app.models.base import db,Base
+from app.models.base import db, Base
 
 from app.models.user import User
 
-from flask_login import login_user,logout_user,current_user,login_required
+from flask_login import login_user, logout_user, current_user, login_required
 from app.libs.email import send_mail
 
 __author__ = '七月'
@@ -51,7 +51,7 @@ def login():
         user = User.query.filter_by(email=form.email.data).first()
         if user and user.check_password(form.password.data):
             login_user(user, remember=True)
-			
+
             next = request.args.get('next')  # 跳转到登陆前的页面
             if not next or not next.startswith('/'):  # 防止重定向攻击
                 return redirect(url_for('web.index'))  
@@ -96,7 +96,7 @@ def forget_password(token):
 @web.route('/change/password', methods=['GET', 'POST'])
 @login_required 
 def change_password():
-    form =  ChangePasswordForm(request.form)
+    form = ChangePasswordForm(request.form)
 
     if request.method == 'POST' and form.validate():
         if current_user.check_password(form.old_password.data):
@@ -104,7 +104,7 @@ def change_password():
             flash('您的密码已重置，请使用新密码登录')
             return redirect(url_for('web.login'))
         flash('密码更改失败')
-    return render_template('auth/change_password.html', form=form)
+    return render_template('auth/change_password.html')
 
 
 @web.route('/logout')
