@@ -39,9 +39,10 @@ class ResetPasswordForm(Form):   # 重置密码 新密码要求
     password2 = PasswordField('确认新密码', validators=[
         DataRequired(), Length(6, 30)])
 
+class ChangePasswordForm(ResetPasswordForm):   # 重置密码 新密码要求
 
-class ChangePasswordForm(ResetPasswordForm):
-    password = PasswordField("原密码", validators=[
-        DataRequired(), Length(6, 32, message='原始密码不正确')])
+    old_password = PasswordField('密码', validators=[
+        DataRequired(), Length(6, 32)])
+
 
 

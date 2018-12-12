@@ -46,6 +46,25 @@ class Wish(Base):
         yushu_book = YuShuBook()
         yushu_book.search_by_isbn(self.isbn)
         return yushu_book.first
+
+    @classmethod
+    def get_user_wishes_by_orm(cls, uid):
+        from app.models.gift import Gift
+        wishes = db.session\
+            .query(Wish, func.count(Gift.id))\
+            .outerjoin(Gift, Gift.isbn == Wish.isbn)\
+            .filter(
+                Gift.launched == False,
+                Wish.launched == False,
+                Gift.status == 1,
+                Wish.status == 1,
+                Wish.uid == uid)\
+            .group_by(Wish.id, Wish.isbn)\
+            .order_by(desc(Wish.create_time))\
+            .all()
+        wishes = [{'wish': wish[0], 'count':wish[1]} for wish in wishes]
+        return wishes
+
 # from app.models.base import Base, db
 # from sqlalchemy import Column, String, Integer, ForeignKey, Boolean, func, desc
 # from sqlalchemy.orm import relationship
