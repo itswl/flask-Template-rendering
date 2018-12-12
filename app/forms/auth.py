@@ -31,7 +31,8 @@ class RegisterForm(EmailForm):  #  注册信息
 class LoginForm(EmailForm):   # 登陆密码
     password = PasswordField('密码', validators=[
         DataRequired(), Length(6, 32)])
-        
+
+
 class ResetPasswordForm(Form):   # 重置密码 新密码要求
     password1 = PasswordField('新密码', validators=[
         DataRequired(), Length(6, 32, message='密码长度至少需要在6到32个字符之间'),
@@ -39,10 +40,14 @@ class ResetPasswordForm(Form):   # 重置密码 新密码要求
     password2 = PasswordField('确认新密码', validators=[
         DataRequired(), Length(6, 30)])
 
+
 class ChangePasswordForm(ResetPasswordForm):   # 重置密码 新密码要求
 
     old_password = PasswordField('密码', validators=[
-        DataRequired(), Length(6, 32)])
+        DataRequired()])
 
-
-
+    # def validate_old_password(self, field):
+    #     # if User.query.filter_by(password=field.data).first():
+    #     #     raise ValidationError('昵称已存在')
+    #     # TODO 验证原密码输入正确
+    #     return True

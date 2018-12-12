@@ -3,9 +3,9 @@ from sqlalchemy import Integer, Float
 from sqlalchemy import String, Boolean
 
 from app.models.base import db,Base
-from werkzeug.security import generate_password_hash,check_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 
-from flask_login import UserMixin
+from flask_login import UserMixin, current_user
 from app import login_manager
 
 from app.libs.helper import is_isbn_or_key
@@ -74,15 +74,10 @@ class User(UserMixin,Base):
     def change_password(cls, new_password):
         #     return False
         # return check_password_hash(self._password,raw)
-        
 
         with db.auto_commit():
-            user = User.query.get_or_404(id)
-            user.password = password1    # 会加密 密码，好好想一下。  
-        return True 
-
-
-
+            user = User.query.get_or_404(current_user.id)
+            user.password = new_password    # 会加密 密码，好好想一下。
 
     def can_save_to_list(self,isbn):
         if is_isbn_or_key(isbn) != 'isbn':  # 判断是不是isbn
