@@ -67,8 +67,9 @@ class BookViewModel:
 
         self.isbn = data['isbn']
         self.pubdate = data['pubdate']
-        self.summary = data['summary']
-        self.pages = data['pages']
+        summary = data['summary']
+        self.summary = summary if len(summary) <= 1000 else summary[:1000]
+        self.pages = data['pages'].replace('页', '')
 
     @property
     def intro(self):
