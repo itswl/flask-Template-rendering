@@ -56,20 +56,21 @@ class BookViewModel:
     #     self.summary = data['summary'] if data['summary'] else ''
     #     self.pages = data['pages'] if data['pages'] else ''
 
+
+    # 因为要写入数据库，所以进行处理
     def __init__(self, data):
         self.title = data['title']
         self.author = '、'.join(data['author'])
         self.binding = data['binding']
         self.publisher = data['publisher']
         self.image = data['image']
-        # self.price = '￥' + data['price']  # 因为价格可能为NONE,str不能和NONE相加，会报错。
-        self.price = '￥' + data['price'] if data['price'] else ''
+        # self.price = '￥' + data['price']  # 因为价格可能为NONE,str不能和NONE相加，会报错。# '￥'去掉，因为api中部分带货币单位
+        self.price = data['price'] 
 
         self.isbn = data['isbn']
         self.pubdate = data['pubdate']
-        summary = data['summary']
-        self.summary = summary if len(summary) <= 1000 else summary[:1000]
-        self.pages = data['pages'].replace('页', '')
+        self.summary = data['summary'][:1000] if data['summary'] else ''
+        self.pages = data['pages'].replace('页', '') if data['pages'] else None
 
     @property
     def intro(self):
