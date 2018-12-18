@@ -17,6 +17,7 @@ from flask import render_template, flash
 
 from app.models.gift import Gift
 from app.models.wish import Wish
+from app.models.book import Book
 from app.view_models.trade import TradeInfo
 
 from flask_login import current_user
@@ -89,6 +90,11 @@ def search():
         if isbn_or_key == 'isbn':
             yushu_book.search_by_isbn(q)
             books.fill(yushu_book,q)
+            Book.insert_into_sql(books.books)
+            # print(11111, books.books)
+            # for b in books.books:
+            #     print('title', b.title)
+            #     print('author', b.author)
         # result = YuShuBook.search_by_isbn(q)
         # result = BookViewModel.package_single(result,q) 
         else:
@@ -97,6 +103,7 @@ def search():
         # result = BookViewModel.package_collection(result,q)
     # return jsonify(result)
             books.fill(yushu_book,q)
+            Book.insert_into_sql(books.books)
     else:
         flash("搜索的关键字不符合要求，请重新输入关键字")
 

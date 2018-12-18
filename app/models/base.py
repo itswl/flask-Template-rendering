@@ -37,7 +37,7 @@ class Base(db.Model):
     def __init__(self):
         self.create_time = int(datetime.now().timestamp())
 
-    def set_attrs(self, attrs_dict):
+    def set_attrs(self, attrs_dict): # form.data b
         for key, value in attrs_dict.items():
             if hasattr(self, key) and key != 'id':
                 setattr(self, key, value)

@@ -17,6 +17,7 @@ class HTTP:  #class HTTP(object):有无都无所谓
 
         if r.status_code != 200:
             return {} if return_json else ''      #特例情况
-        return r.json() if return_json else r.text   #正常返回
+        ret_json = r.json() if return_json else r.text   #正常返回
+        return ret_json
 
 #爬虫  scrapy  或 requests +beautiful soap 
