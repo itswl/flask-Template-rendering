@@ -1,10 +1,8 @@
-"""
-create by gaowenfeng on 
-"""
+
 
 from flask import Flask, current_app
 
-__author__ = "gaowenfeng"
+__author__ = "weilai"
 
 app = Flask(__name__)
 
