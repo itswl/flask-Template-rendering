@@ -1,8 +1,6 @@
-"""
-create by gaowenfeng on 
-"""
 
-__author__ = "gaowenfeng"
+
+__author__ = "weilai"
 
 
 class A:

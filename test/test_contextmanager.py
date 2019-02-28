@@ -1,6 +1,3 @@
-"""
-create by gaowenfeng on 
-"""
 
 __author__ = 'weilai'
 from contextlib import contextmanager
