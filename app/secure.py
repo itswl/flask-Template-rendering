@@ -18,4 +18,4 @@ MAIL_USE_SSL = False
 MAIL_USE_TLS = True
 MAIL_USERNAME = 'imwl@live.com'
 # QQ邮箱->设置->账户->[POP3...]->生成授权码->发送短信->获取授权码
-MAIL_PASSWORD = 'Wl19950707'
+MAIL_PASSWORD = '********'
