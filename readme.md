@@ -91,6 +91,7 @@ MAIL_SENDER = '鱼书 <xxx@***.com>'
 最好在pipenv的虚拟环境中安装，避免全局污染
 - flask
 ```
+
 pipenv install flask
 ```
 - requests
