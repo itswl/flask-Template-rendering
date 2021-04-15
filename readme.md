@@ -1,4 +1,4 @@
-Python+Flask 制作公益赠书平台-鱼书
+Python+Flask 制作公益赠书平台
 
 
 ## 特性
